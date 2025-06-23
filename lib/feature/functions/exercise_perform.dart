@@ -393,9 +393,7 @@ class _ExercisePerformState extends State<ExercisePerform>
           if (mounted && // Ensure widget is still mounted
               !_isProcessingFrame &&
               _cameraController != null &&
-              _cameraController!
-                  .value
-                  .isStreamingImages && // Check if still streaming
+              _cameraController!.value.isStreamingImages &&
               _socket != null &&
               _socket!.connected) {
             _onFrameReceived(image);
