@@ -13,7 +13,7 @@ void main() async {
 
   // Initialize OpenFoodFacts
   OpenFoodAPIConfiguration.userAgent = UserAgent(
-    name: 'Cih2',
+    name: 'Garbh',
     version: '1.0.0',
     system: 'Android',
   );
