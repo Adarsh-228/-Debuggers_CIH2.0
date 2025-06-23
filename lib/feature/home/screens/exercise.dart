@@ -462,7 +462,7 @@ class _ExerciseState extends State<Exercise> {
       };
 
       final response = await http.post(
-        Uri.parse('http://192.168.105.156:8000/feedback'),
+        Uri.parse('http://192.168.158.156:8000/feedback_gemini'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(requestBody),
       );

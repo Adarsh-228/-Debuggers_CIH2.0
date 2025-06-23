@@ -410,7 +410,7 @@ class _ExercisePerformState extends State<ExercisePerform>
       return;
     }
 
-    final serverIp = "192.168.105.172"; // CONFIGURATION: Your server IP
+    final serverIp = "192.168.158.172"; // CONFIGURATION: Your server IP
 
     if (serverIp == "YOUR_SERVER_IP_PLACEHOLDER") {
       if (mounted) {

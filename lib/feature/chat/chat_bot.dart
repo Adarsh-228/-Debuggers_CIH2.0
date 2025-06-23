@@ -217,7 +217,7 @@ class _ChatBotState extends State<ChatBot> {
 
   // Send message to backend API
   Future<String> _sendMessageToBot(String text) async {
-    final url = Uri.parse('http://192.168.105.156:8000/gemini_chatbot');
+    final url = Uri.parse('http://192.168.158.156:8000/gemini_chatbot');
 
     try {
       // Include pregnancy week in the message
