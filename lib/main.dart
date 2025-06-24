@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hackathon/feature/splash/splash_screen.dart';
 import 'package:hackathon/feature/logs/cubit/meal_log_cubit.dart';
 import 'package:hackathon/feature/food/product/logic/cubit/product_cubit.dart';
+import 'package:hackathon/feature/logs/data/repositories/meal_log_repository.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,8 +30,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiProvider(
       providers: [
+        Provider<MealLogRepository>(create: (_) => getIt<MealLogRepository>()),
         BlocProvider(create: (_) => getIt<ProductCubit>()),
         BlocProvider(create: (_) => getIt<MealLogCubit>()..loadLogs()),
       ],

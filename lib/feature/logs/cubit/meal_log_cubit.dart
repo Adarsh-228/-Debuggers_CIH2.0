@@ -61,23 +61,42 @@ class MealLogCubit extends Cubit<MealLogState> {
   }
 
   Future<void> _saveLogs() async {
-    final log = MealLogModel(
-      id: DateTime.now().toIso8601String(),
-      timestamp: DateTime.now(),
-      type: MealType.breakfast, // Default type
-      items: [
-        ...state.breakfast,
-        ...state.lunch,
-        ...state.snacks,
-        ...state.dinner,
-      ],
-    );
-    await _repository.saveMealLog(log);
+    final currentDate = DateTime.now();
+    final dateKey =
+        '${currentDate.year}-${currentDate.month.toString().padLeft(2, '0')}-${currentDate.day.toString().padLeft(2, '0')}';
+
+    // Save individual meal logs for each meal type
+    final mealTypes = [
+      (MealType.breakfast, state.breakfast),
+      (MealType.lunch, state.lunch),
+      (MealType.snacks, state.snacks),
+      (MealType.dinner, state.dinner),
+    ];
+
+    for (final (mealType, items) in mealTypes) {
+      if (items.isNotEmpty) {
+        final log = MealLogModel(
+          id: '${dateKey}_${mealType.name}',
+          timestamp: currentDate,
+          type: mealType,
+          items: items,
+        );
+        await _repository.saveMealLog(log);
+      }
+    }
   }
 
   Future<void> loadLogs() async {
     final logs = await _repository.getMealLogs();
     print('logs: $logs');
     // Implementation depends on how you want to handle historical data
+  }
+
+  Future<List<MealLogModel>> getMealLogs() async {
+    return await _repository.getMealLogs();
+  }
+
+  Future<void> clearLogs() async {
+    await _repository.clearLogs();
   }
 }

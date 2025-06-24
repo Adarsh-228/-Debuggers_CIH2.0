@@ -2,10 +2,13 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:hackathon/feature/logs/cubit/meal_log_cubit.dart';
+import 'package:hackathon/feature/logs/data/models/meal_log_model.dart';
 
 class ImageScanScreen extends StatefulWidget {
   const ImageScanScreen({super.key});
@@ -308,20 +311,7 @@ class _ImageScanScreenState extends State<ImageScanScreen> {
             _buildIngredientsCard(),
           const SizedBox(height: 24),
           FilledButton.icon(
-            onPressed: () {
-              // TODO: Implement Add to Meal Log functionality
-              // This would typically involve passing _foodData to MealLogScreen or a Cubit
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    '$foodName added to meal log (simulation).',
-                    style: GoogleFonts.lato(),
-                  ),
-                  backgroundColor: _accentColor,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-            },
+            onPressed: () => _showMealTypeDialog(),
             icon: const Icon(Icons.add_task_rounded),
             label: Text(
               'Add to Meal Log',
@@ -722,5 +712,148 @@ class _ImageScanScreenState extends State<ImageScanScreen> {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  void _showMealTypeDialog() {
+    if (_foodData == null) return;
+
+    final foodName = _foodData!['name']?.toString() ?? 'Scanned Food';
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.restaurant_menu, size: 48, color: _primaryColor),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Add to Meal Log',
+                    style: GoogleFonts.lato(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: _textColor,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Select which meal this belongs to:',
+                    style: GoogleFonts.lato(
+                      fontSize: 14,
+                      color: _secondaryTextColor,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 2.5,
+                    children: [
+                      _buildMealTypeButton(
+                        MealType.breakfast,
+                        Icons.breakfast_dining,
+                        'Breakfast',
+                        Colors.amber.shade700,
+                      ),
+                      _buildMealTypeButton(
+                        MealType.lunch,
+                        Icons.lunch_dining,
+                        'Lunch',
+                        Colors.green.shade600,
+                      ),
+                      _buildMealTypeButton(
+                        MealType.snacks,
+                        Icons.cookie,
+                        'Snacks',
+                        Colors.purple.shade400,
+                      ),
+                      _buildMealTypeButton(
+                        MealType.dinner,
+                        Icons.dinner_dining,
+                        'Dinner',
+                        Colors.indigo.shade600,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      'Cancel',
+                      style: GoogleFonts.lato(color: _secondaryTextColor),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+    );
+  }
+
+  Widget _buildMealTypeButton(
+    MealType mealType,
+    IconData icon,
+    String label,
+    Color color,
+  ) {
+    return FilledButton.icon(
+      onPressed: () {
+        Navigator.pop(context);
+        _addToMealLog(mealType);
+      },
+      icon: Icon(icon, size: 20),
+      label: Text(
+        label,
+        style: GoogleFonts.lato(fontSize: 12, fontWeight: FontWeight.bold),
+      ),
+      style: FilledButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      ),
+    );
+  }
+
+  void _addToMealLog(MealType mealType) {
+    if (_foodData == null) return;
+
+    final foodName = _foodData!['name']?.toString() ?? 'Scanned Food';
+    final calories = _foodData!['calories']?.toString();
+
+    final quantity = calories != null ? '${calories} kcal' : null;
+
+    final foodItem = FoodItem(name: foodName, quantity: quantity);
+
+    // Get the MealLogCubit and add the item
+    context.read<MealLogCubit>().addMeal(mealType, foodItem);
+
+    // Show success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '$foodName added to ${mealType.name}!',
+          style: GoogleFonts.lato(),
+        ),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'View',
+          textColor: Colors.white,
+          onPressed: () {
+            Navigator.pop(context); // Go back to food screen
+          },
+        ),
+      ),
+    );
   }
 }

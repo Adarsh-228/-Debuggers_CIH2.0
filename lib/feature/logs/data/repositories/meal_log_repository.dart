@@ -11,6 +11,11 @@ class MealLogRepository {
 
   Future<void> saveMealLog(MealLogModel log) async {
     final logs = await getMealLogs();
+
+    // Remove existing log with same ID to avoid duplicates
+    logs.removeWhere((existingLog) => existingLog.id == log.id);
+
+    // Add the new log
     logs.add(log);
 
     final jsonLogs = logs.map((log) => log.toJson()).toList();
