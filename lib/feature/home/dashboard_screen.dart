@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon/feature/chat/chat_bot.dart';
 import 'package:hackathon/feature/food/home_food.dart';
 import 'package:hackathon/feature/home/screens/home.dart';
 import 'package:hackathon/feature/home/screens/exercise.dart';
+import 'package:hackathon/feature/reports/ui/report_tab.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -16,10 +16,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // Placeholder widgets for each tab
   static const List<Widget> _widgetOptions = <Widget>[
+    ReportTab(),
     Home(),
     HomeFood(),
     Exercise(),
-    ChatBot(),
   ];
 
   void _onItemTapped(int index) {
@@ -43,9 +43,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onDestinationSelected: _onItemTapped,
         destinations: const <NavigationDestination>[
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.document_scanner_outlined),
+            label: "Analysis",
+            selectedIcon: Icon(Icons.document_scanner),
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.dashboard_outlined),
+            selectedIcon: Icon(Icons.dashboard),
+            label: 'Dashboard',
           ),
           NavigationDestination(
             icon: Icon(Icons.restaurant_menu_outlined),
@@ -56,11 +61,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: Icon(Icons.fitness_center_outlined),
             selectedIcon: Icon(Icons.fitness_center),
             label: 'Exercise',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.assistant_outlined),
-            selectedIcon: Icon(Icons.assistant),
-            label: 'AI Assistant',
           ),
         ],
         elevation: 4.0,
