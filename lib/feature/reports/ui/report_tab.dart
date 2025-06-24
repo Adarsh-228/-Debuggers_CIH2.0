@@ -621,11 +621,8 @@ class _ReportTabState extends State<ReportTab> with TickerProviderStateMixin {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            colors: [color.withOpacity(0.1), color.withOpacity(0.05)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: Colors.white,
+          border: Border.all(color: color.withOpacity(0.15), width: 1),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -723,7 +720,7 @@ class _ReportTabState extends State<ReportTab> with TickerProviderStateMixin {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(22),
-                            child: Image.file(imageFile, fit: BoxFit.cover),
+                            child: Image.file(imageFile, fit: BoxFit.scaleDown),
                           ),
                           Positioned(
                             right: 12,
@@ -926,7 +923,7 @@ class _ReportTabState extends State<ReportTab> with TickerProviderStateMixin {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: Colors.grey.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -979,7 +976,7 @@ class _ReportTabState extends State<ReportTab> with TickerProviderStateMixin {
         border: Border.all(color: kReportErrorColor.withOpacity(0.2), width: 2),
         boxShadow: [
           BoxShadow(
-            color: kReportErrorColor.withOpacity(0.1),
+            color: Colors.grey.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -1068,7 +1065,7 @@ class _ReportTabState extends State<ReportTab> with TickerProviderStateMixin {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: Colors.grey.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
